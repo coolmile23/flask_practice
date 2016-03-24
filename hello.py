@@ -2,6 +2,8 @@
 
 # -*- coding:utf-8 -*-
 
+import os
+
 from flask import Flask
 from flask import render_template
 from flask import url_for
@@ -11,24 +13,48 @@ from flask import flash
 from flask.ext.script import Manager
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
+from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 
-class NameForm(Form):
-	name = StringField('What is you name?', validators=[Required()])
-	submit = SubmitField('Submit')
+basedir = os.path.abspath(os.path.dirname(__file__))
 
+
+app.config['SECRET_KEY'] = 'This key is hard to guess'
+app.config['SQLALCHEMY_DATABASE_URL'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
 app = Flask(__name__)
 app.debug = True
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
+db = SQLAlchemy(app)
 
-app.config['SECRET_KEY'] = 'This key is hard to guess'
+
+class NameForm(Form):
+	name = StringField('What is you name?', validators=[Required()])
+	submit = SubmitField('Submit')
+
+
+class Role(db.Model):
+	__tablename__ = 'roles'
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(64), unique=True)
+
+	def __repr__(self):
+		return '<Role %r>' % self.name
+
+class User(db.Model):
+	__tablename__ == 'users'
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(64), unique=True, index=True) 
+
+	def __repr__(self):
+		return '<User %r>' % self.name
 
 @app.route('/user/<name>')
 def user(name):
