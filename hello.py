@@ -20,6 +20,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.script import Shell
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -60,6 +61,10 @@ class User(db.Model):
 
 	def __repr__(self):
 		return '<User %r>' % self.username
+
+def make_shell_context():
+	return dict(app=app, db=db, User=User, Role=Role)
+manager.add_command("shell", Shell(make_context = make_shell_context))
 
 @app.route('/user/<name>')
 def user(name):
