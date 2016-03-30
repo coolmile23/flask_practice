@@ -22,6 +22,8 @@ from wtforms.validators import Required
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.script import Shell
 
+from flask.ext.migrate import Migrate, MigrateCommand
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class NameForm(Form):
@@ -34,13 +36,15 @@ app.debug = True
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+manager.add_command('db', MigrateCommand)
 
 app.config['SECRET_KEY'] = 'This key is hard to guess'
 app.config['SQLALCHEMY_DATABASE_URI'] = \
 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
-db = SQLAlchemy(app)
 
 class Role(db.Model):
 	__tablename__ = 'roles'
