@@ -50,7 +50,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
 app.config['MAIL_SERVER'] = 'smtp.163.com'
-app.config['MAIL_PORT'] = 465 # 465/994  25
+app.config['MAIL_PORT'] = 994# 465/994  25
 app.config['MAIL_USE_TLS'] = False 
 app.config['MAIL_USE_SSL'] = True 
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
