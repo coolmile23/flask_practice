@@ -16,10 +16,14 @@ def index():
 			db.session.add(user)
 			session['known'] = False
 			if current_app.config['FLASKY_ADMIN']:
+				print 'FLASKY_ADMIN IS SET: SEND MAIL NOW.'
+				print 'current_app.config[flasky_admin] = %s' % current_app.config['FLASKY_ADMIN']
+				print 'user = %s' % user
 				send_email(current_app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', user = user)
 		else:
 			session['known'] = True
 		session['name'] = form.name.data
+		print 'session[name] = %s' % session['name']
 		return redirect(url_for('.index'))
 	return render_template('index.html', 
 			form = form, name = session.get('name'),
