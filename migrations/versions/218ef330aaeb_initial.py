@@ -1,13 +1,13 @@
 """initial
 
-Revision ID: 38030fd8d90f
+Revision ID: 218ef330aaeb
 Revises: None
-Create Date: 2016-04-05 15:17:13.881815
+Create Date: 2016-04-05 16:44:30.072291
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '38030fd8d90f'
+revision = '218ef330aaeb'
 down_revision = None
 
 from alembic import op
@@ -28,6 +28,11 @@ def upgrade():
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=64), nullable=True),
+    sa.Column('name', sa.String(length=64), nullable=True),
+    sa.Column('location', sa.String(length=64), nullable=True),
+    sa.Column('about_me', sa.Text(), nullable=True),
+    sa.Column('member_since', sa.DateTime(), nullable=True),
+    sa.Column('last_seen', sa.DateTime(), nullable=True),
     sa.Column('email', sa.String(length=64), nullable=True),
     sa.Column('role_id', sa.Integer(), nullable=True),
     sa.Column('password_hash', sa.String(length=128), nullable=True),
