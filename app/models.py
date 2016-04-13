@@ -7,6 +7,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from datetime import datetime
 import hashlib
+import bleach
+from markdown import markdown
 from flask import request
 
 
@@ -74,6 +76,8 @@ class User(UserMixin, db.Model):
 	password_hash = db.Column(db.String(128))
 	confirmed = db.Column(db.Boolean, default = False)
 	avatar_hash = db.Column(db.String(32))
+	
+	comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
 	followed = db.relationship('Follow',
 				foreign_keys = [Follow.follower_id],
@@ -226,6 +230,8 @@ class Post(db.Model):
 	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	body_html = db.Column(db.Text)
 	
+	comments = db.relationship('Comment', backref='post', lazy='dynamic')	
+	
 	@staticmethod
 	def generate_fake(count = 100):
 		from random import seed, randint
@@ -249,9 +255,30 @@ class Post(db.Model):
 		target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format = 'html'), 
 								tags = allowed_tags, strip = True))
 
-		db.envent.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 
+
+class Comment(db.Model):
+	__tablename__ = 'comments'	
+	id = db.Column(db.Integer, primary_key = True)
+	body = db.Column(db.Text)
+	body_html = db.Column(db.Text)
+	timestamp = db.Column(db.DateTime, index = True, default = datetime.utcnow)
+	disabled = db.Column(db.Boolean)
+	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+	
+	@staticmethod
+	def on_changed_body(target, value, oldvalue, initiator):
+		allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 
+				'strong']
+		target.body_html = bleach.linkify(bleach.clean(
+				markdown(value, output_format='html'),
+				tags = allowed_tags, strip = True))
+
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)
+	
 
 login_manager.anonymous_user = AnonymousUser
 
