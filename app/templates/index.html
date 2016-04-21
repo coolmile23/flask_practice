@@ -11,9 +11,11 @@
 
 {% block page_content %}
 <div class="page-header">
-	<h1>Hello, {% if current_user.is_authenticated %} {{ current_user.username }} {% else %} Stranger {% endif %}!</h1>
+	<h1>Hello, {% if current_user.is_authenticated %} \
+			{{ current_user.username }} \
+		{% else %} Stranger {% endif %}!</h1>
 	{% if not known %}
-	<p>Pleased to meet you!</p>
+	<p>Pleased to meet you! {{ time_now }}</p>
 	{% else %}
 	<p>Happly to see you again!</p>
 	{% endif %}
@@ -26,10 +28,13 @@
 
 <div class="post-tabs">
 	<ul class="nav nav-tabs">
-		<li {% if not show_followed %} class="active" {% endif %}>			<a href="{{ url_for('.show_all') }}">All</a></li>
+		<li {% if not show_followed %} class="active" {% endif %}> 
+		<a href="{{ url_for('.show_all') }}">All</a></li>
+
 		{% if current_user.is_authenticated %}
-		<li {% if show_followed %} class="active"{% endif %}>
-			<a href="{{ url_for('.show_followed') }}">Followers</a></li>
+			<li {% if show_followed %} class="active"{% endif %}>
+				<a href="{{ url_for('.show_followed') }}">Followers</a>
+			</li>
 		{% endif %}
 	</ul>
 </div>
@@ -41,4 +46,3 @@
 	</div>
 {% endif %}
 {% endblock %}
-

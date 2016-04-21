@@ -1,16 +1,30 @@
 {% extends "bootstrap/base.html" %}
 
-{% block head %}
-	{{ super() }}
-	<link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}" type="image/x-icon">
-	<link rel="icon" href="{{url_for('static', filename='favicon.ico')}}" type='image/x-icon'>
-{% endblock %}
+{% block html %} {# <html> #}
 
 {% block title %}Flask{% endblock %}
 
+{% block head %} {# <head> #}
+	{{ super() }}
+	<link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico')}}" type="image/x-icon">
+	<link rel="icon" href="{{url_for('static', filename='favicon.ico')}}" type='image/x-icon'>
+	
+	<style>
+		.footer {
+			background-color: green;
+			font-size: 20px;
+			text-align: center;
+			margin-bottom: 0;
+		}
+	</style>
+{% endblock %} {# </head> #}
+
+
+
+{% block body %} {# <body> #}
 
 {% block navbar %}
-	<div class="container">
+	<div class="container navbar-inverse">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 				<span class="sr-only">Toggle navigation</span>	
@@ -48,7 +62,7 @@
 			</ul>
 		</div>
 	</div>
-{% endblock %}
+{% endblock %} {# block navbar #}
 
 {% block content %}
 	<div class="container">
@@ -60,9 +74,17 @@
 		{% endfor %}
 		{% block page_content %} {% endblock %}
 	</div>
-{% endblock %}
+
+{% endblock %} {# block content #}
+
+<div class="footer">
+	@2016 made by yly. all rights reserved.
+</div>
 
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
 {% endblock %}
+
+{% endblock %} {# block body #}
+{% endblock %} {# block html #}

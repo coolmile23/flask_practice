@@ -1,17 +1,23 @@
 from datetime import datetime
-from flask import render_template, session, redirect, url_for, current_app, flash, request, make_response
+from flask import render_template, session, redirect, url_for, current_app, \
+		flash, request, make_response
 from ..email import send_email
 from . import main
-from .forms import NameForm, EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
+from .forms import NameForm, EditProfileForm, EditProfileAdminForm, \
+		PostForm, CommentForm
 from .. import db
 from ..models import User, Permission, Post, Comment
 from flask.ext.login import login_required, current_user
 from ..decorators import admin_required, permission_required
+from time import asctime
+
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
 	form = PostForm()
-	if current_user.can(Permission.WRITE_ARTICLES) and form.validate_on_submit():
+	if current_user.can(Permission.WRITE_ARTICLES) and \
+		form.validate_on_submit():
+
 		post = Post(body = form.body.data, \
 			author = current_user._get_current_object())
 		db.session.add(post)
@@ -30,9 +36,15 @@ def index():
 			page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
 			error_out = False)
 	posts = pagination.items
+	
+	time_now = asctime()
 
 	return render_template('index.html', 
-			form = form, posts = posts, show_followed = show_followed, pagination = pagination)
+			form = form, 
+			posts = posts, 
+			show_followed = show_followed, 
+			pagination = pagination, 
+			time_now = time_now)
 
 
 
@@ -237,3 +249,4 @@ def moderate_disable(id):
 	db.session.add(comment)
 	return redirect(url_for('.moderate',
 				page = request.args.get('page', 1, type=int)))
+
