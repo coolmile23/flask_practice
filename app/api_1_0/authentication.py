@@ -13,11 +13,12 @@ def verify_password(email_or_token, password):
 		return True
 	if password == '':
 		g.current_user = User.verify_auth_token(email_or_token)
-		g.token_
+		g.token_used = True
 	user = User.query.filter_by(email = email_or_token).first()
 	if not user:
 		return False
 	g.current_user = user
+	g.token_used = False
 	return user.verify_password(password)
 
 @auth.error_handler
@@ -35,7 +36,7 @@ def before_request():
 
 @api.route('/token')
 def get_token():
-	if g.current_user.is_anonymous() or g.token_used:
+	if g.current_user.is_anonymous or g.token_used:
 		return unauthourzed('Invalid credentials')
 	return jsonify({'token': g.current_user.generate_auth_token(
 			expiration=3600), 'expiration': 3600})
