@@ -5,9 +5,12 @@ Flask-Migrate==1.1.0
 Flask-Moment==0.2.1
 Flask-SQLAlchemy==1.0
 Flask-Script==0.6.6
+<<<<<<< HEAD
 Flask-Login==0.3.2
 Flask-Pagedown==0.2.1
 Flask-Httpauth==3.1.2
+=======
+>>>>>>> de16c683015bef40a3fcef4b23a3703e624221f6
 Flask-WTF==0.9.4
 Jinja2==2.7.1
 Mako==0.9.1
@@ -19,7 +22,10 @@ alembic==0.6.2
 blinker==1.3
 itsdangerous==0.23
 ForgeryPy==0.1
+<<<<<<< HEAD
 gunicorn==18.0
 psycopg2==2.5.1
 bleach==1.4.2
 markdown==2.6.6
+=======
+>>>>>>> de16c683015bef40a3fcef4b23a3703e624221f6
